@@ -17,7 +17,7 @@ ls -la /dev/triedb
 lsblk -o NAME,SIZE,TYPE,MOUNTPOINT,PARTUUID | grep -v loop
 ```
 
-Note the parent device name that `/dev/triedb` points to (e.g. `nvme0n1p1` → parent is `nvme0n1`) and set it as the `TRIEDB_DEV` variable for all subsequent steps:
+Note the parent device name that `/dev/triedb` points to (e.g. `nvme0n1p1` → parent is `nvme0n1`, `nvme1n1p1` → parent is `nvme1n1`) and set it as the `TRIEDB_DEV` variable for all subsequent steps:
 
 ```bash
 # Enter your device name here (e.g. nvme0n1, nvme1n1, nvme2n1 ...)
@@ -42,7 +42,6 @@ parted /dev/$TRIEDB_DEV mkpart triedb 0% 100%
 PARTUUID=$(lsblk -o PARTUUID /dev/${TRIEDB_DEV}p1 | grep -v PARTUUID)
 echo "ENV{ID_PART_ENTRY_UUID}==\"$PARTUUID\", MODE=\"0666\", SYMLINK+=\"triedb\"" \
   > /etc/udev/rules.d/99-triedb.rules
-
 udevadm control --reload
 udevadm trigger
 ```
@@ -84,7 +83,7 @@ exit
 su - monad
 source .env
 MF_BUCKET=https://bucket.monadinfra.com
-curl -sSL $MF_BUCKET/scripts/testnet-2/download-forkpoint.sh | bash
+curl -sSL $MF_BUCKET/scripts/testnet/download-forkpoint.sh | bash
 exit
 ```
 
@@ -93,8 +92,10 @@ exit
 ## 9. Update Validator Configuration
 
 ```bash
-curl -o /home/monad/monad-bft/config/validators.toml \
-  https://bucket.monadinfra.com/validators/testnet-2/validators.toml
+su - monad
+curl -o monad-bft/config/validators.toml \
+  https://bucket.monadinfra.com/validators/testnet/validators.toml
+exit
 ```
 
 ---
