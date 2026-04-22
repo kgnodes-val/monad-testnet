@@ -21,7 +21,7 @@ Note the parent device name that `/dev/triedb` points to (e.g. `nvme0n1p1` → p
 
 ```bash
 # Enter your device name here (e.g. nvme0n1, nvme1n1, nvme2n1 ...)
-TRIEDB_DEV=nvme0n1
+TRIEDB_DEV=
 ```
 
 ---
